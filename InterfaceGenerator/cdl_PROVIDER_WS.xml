@@ -7,9 +7,9 @@
 
 
 
-	<interface protocol="COAP" address="http://127.0.0.1/8888" >
+	<interface protocol="HTTP" address="http://127.0.0.1/8888" >
 	
-		<method name="GET" id="indoortemperature" path="/indoortemperature">
+		<method name="GET" id="indoortemperature" path="/get_json_r">
 
 			<response status="200">
                             <format> 

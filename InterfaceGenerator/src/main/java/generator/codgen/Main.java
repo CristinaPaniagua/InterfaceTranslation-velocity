@@ -5,9 +5,8 @@
  */
 package generator.codgen;
 
-import eu.arrowhead.common.CodgenUtil;
 import java.util.ArrayList;
-import eu.arrowhead.common.TypeSafeProperties;
+import eu.generator.interfaceGen.ProviderInterpreterGen;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,6 +41,7 @@ private static ArrayList<String> classesResponseC= new ArrayList<String>();
         
         String service = "indoortemperature";
         String system="providerTest";
+        String systemURL="http://127.0.0.1:8899/test";
         readCDL readConsumer = new readCDL();
         MD_Consumer= readConsumer.read("indoortemperature","consumer");
         Boolean MD_ConsumerValid=metedataValidation(MD_Consumer);
@@ -121,14 +121,17 @@ private static ArrayList<String> classesResponseC= new ArrayList<String>();
     
          
         
-            //ResourceLWGen.ResourcesLWGen(MD_Consumer, MD_Provider);
-       
-        //System.out.println(MD_Consumer.getRequest() +"___" + MD_Provider.getRequest());
+            
+   
         
         //Server generation.. Consumer Side
         ServerGen sg= new ServerGen();
          sg.GenerateServer(MD_Consumer.getProtocol());
-         sg.GenerateResources(MD_Consumer);
+         sg.GenerateResources(MD_Consumer,MD_Provider, systemURL);
+        ProviderInterpreterGen pi= new ProviderInterpreterGen();
+         pi.GenerateProvInterpreter(MD_Provider);
+        //Payload Translator 
+         ResourceLWGen.PayloadTranslator(MD_Consumer, MD_Provider);
       
         
         

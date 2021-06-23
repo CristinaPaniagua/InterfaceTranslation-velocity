@@ -1,6 +1,7 @@
-C:\Users\cripan\Desktop\Code_generation\ConsumerCodeGeneration\ConsumerGenerationModulesSpring\InterfaceLightweight\src\main\java\eu\generator\consumer\Value.java
-C:\Users\cripan\Desktop\Code_generation\ConsumerCodeGeneration\ConsumerGenerationModulesSpring\InterfaceLightweight\src\main\java\eu\generator\provider\ResponseDTO_P0.java
-C:\Users\cripan\Desktop\Code_generation\ConsumerCodeGeneration\ConsumerGenerationModulesSpring\InterfaceLightweight\src\main\java\eu\generator\consumer\ResponseDTO_C0.java
-C:\Users\cripan\Desktop\Code_generation\ConsumerCodeGeneration\ConsumerGenerationModulesSpring\InterfaceLightweight\src\main\java\Server\ServerApplication.java
-C:\Users\cripan\Desktop\Code_generation\ConsumerCodeGeneration\ConsumerGenerationModulesSpring\InterfaceLightweight\src\main\java\eu\generator\resources\RESTResources.java
-C:\Users\cripan\Desktop\Code_generation\ConsumerCodeGeneration\ConsumerGenerationModulesSpring\InterfaceLightweight\src\main\java\eu\generator\consumer\RequestDTO_C0.java
+C:\Users\cripan\Desktop\Code_generation\InterfaceTranslatorSystem\GenInterface\src\main\java\eu\generator\provider\ResponseDTO_P0.java
+C:\Users\cripan\Desktop\Code_generation\InterfaceTranslatorSystem\GenInterface\src\main\java\eu\generator\resources\ProviderInterpreter.java
+C:\Users\cripan\Desktop\Code_generation\InterfaceTranslatorSystem\GenInterface\src\main\java\eu\generator\resources\PayloadTranslator.java
+C:\Users\cripan\Desktop\Code_generation\InterfaceTranslatorSystem\GenInterface\src\main\java\Server\ServerApplication.java
+C:\Users\cripan\Desktop\Code_generation\InterfaceTranslatorSystem\GenInterface\src\main\java\eu\generator\consumer\Value.java
+C:\Users\cripan\Desktop\Code_generation\InterfaceTranslatorSystem\GenInterface\src\main\java\eu\generator\consumer\ResponseDTO_C0.java
+C:\Users\cripan\Desktop\Code_generation\InterfaceTranslatorSystem\GenInterface\src\main\java\eu\generator\resources\RESTResources.java

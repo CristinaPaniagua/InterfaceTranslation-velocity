@@ -1,7 +1,7 @@
 eu\generator\resources\RESTResources.class
 eu\generator\consumer\ResponseDTO_C0.class
-eu\generator\resources\RESTResources$1.class
-eu\generator\consumer\RequestDTO_C0.class
 eu\generator\consumer\Value.class
 eu\generator\provider\ResponseDTO_P0.class
+eu\generator\resources\PayloadTranslator.class
 Server\ServerApplication.class
+eu\generator\resources\ProviderInterpreter.class

@@ -352,10 +352,7 @@ public class ResourceLWGen {
  public static MethodSpec  publishResourceConst(){
   
      MethodSpec.Builder constResource = MethodSpec.constructorBuilder()
-    .addModifiers(Modifier.PUBLIC)
-    .addStatement(" super(\"publish\");\n" +
-
-                    " getAttributes().setTitle(\"Publish Resource\")" );
+    .addModifiers(Modifier.PUBLIC);
            
      MethodSpec constructor= constResource.build();
         return constructor;      
@@ -663,7 +660,6 @@ public class ResourceLWGen {
   
     MethodSpec.Builder payload = MethodSpec.methodBuilder("requestAdaptor")
     .addModifiers(Modifier.PUBLIC)
-    .addModifiers(Modifier.STATIC)
     .returns(RequestDTO_P0.class)
     .addParameter(RequestDTO_C0.class, "payload_C")
     .addStatement(" $T payload_P = new RequestDTO_P0()",RequestDTO_P0.class);
@@ -903,7 +899,6 @@ public class ResourceLWGen {
   
      MethodSpec.Builder payload = MethodSpec.methodBuilder("responseAdaptor")
     .addModifiers(Modifier.PUBLIC)
-    .addModifiers(Modifier.STATIC)
     .returns(ResponseDTO_C0.class)
     .addParameter(ResponseDTO_P0.class, "payload_P")
     .addStatement(" $T payload_C= new ResponseDTO_C0()",ResponseDTO_C0.class);
@@ -1137,241 +1132,6 @@ public class ResourceLWGen {
   }
     
     
-    /* //RESPONSE TRANSFOR CONSIDERING THAT THE PROVIDER IS THE REFENCE ( WE WANT A MATCH FOR ALL THE PROVIDER INFO)
-      public static MethodSpec responseTransform(InterfaceMetadata MD_C, InterfaceMetadata MD_P){
-  
-     MethodSpec.Builder payload = MethodSpec.methodBuilder("responseAdaptor")
-    .addModifiers(Modifier.PUBLIC)
-    .addModifiers(Modifier.STATIC)
-    .returns(ResponseDTO_C0.class)
-    .addParameter(ResponseDTO_P0.class, "payload_P")
-    .addStatement(" $T payload_C= new ResponseDTO_C0()",ResponseDTO_C0.class);
-  
-    
-     Boolean match =false;
-      ArrayList<String[]> elements_responseC=MD_C.elements_response.get(0).getElements();
-      ArrayList<String[]> elements_responseP=MD_P.elements_response.get(0).getElements();
-      ArrayList<String[]> metadata_responseC=MD_C.elements_response.get(0).getMetadata();
-      ArrayList<String[]> metadata_responseP=MD_P.elements_response.get(0).getMetadata();
-      Boolean NestedP=false;
-      Boolean NestedC=false;
-      String NewClassP=null;
-      String NewClassC=null;
-      String nameP="";
-      String typeP="";
-      String nameC="";
-      String typeC="";
-      int newClassesP=0;
-      int newClassesC=0;
-      
-      System.out.println("LIST OF RESPONSE ELEMENTS P:");
-       CodgenUtil.readList(metadata_responseP);
-        System.out.println("LIST OF RESPONSE ELEMENTS P:");
-       CodgenUtil.readList(elements_responseP);
-       System.out.println("LIST OF RESPONSE ELEMENTS C:");
-       CodgenUtil.readList(metadata_responseC);
-        System.out.println("LIST OF RESPONSE ELEMENTS P:");
-       CodgenUtil.readList(elements_responseC);
-       
-     for (int i = 0; i < elements_responseP.size(); i++){ 
-       nameP=elements_responseP.get(i)[0];
-       typeP=elements_responseP.get(i)[1];
-       // System.out.println(i); 
-        
-       if(nameP.equals("Newclass")){
-               NewClassP= typeP;
-               NestedP=true;
-               newClassesP++;
-       }else if(nameP.equals("StopClass")){
-               NestedP=false;
-       }else{       
-           
-           
-         
-           if(nameP.equals("child")){
-                     nameP=elements_responseP.get(i)[1];
-                     typeP=elements_responseP.get(i)[2];
-           }
-        
-        
-      System.out.println("Provider reponse: " +nameP +" - "+ typeP);
-       // match=false;
-        
-            for (int j = 0; j < elements_responseC.size(); j++){ 
-               nameC=elements_responseC.get(j)[0];
-               typeC=elements_responseC.get(j)[1];
-                 
-                 
-                if(nameC.equals("Newclass")){
-                    NewClassC= typeC;
-                    newClassesC++;
-                   // if(NestedC==false) payload.addStatement(" eu.generator.consumer.$L $L = new  eu.generator.consumer.$L ()", Capitalize(NewClassC), NewClassC, Capitalize(NewClassC));
-                        NestedC=true;
-                        
-                 }else if(nameC.equals("StopClass")){
-                        NestedC=false;
-                    
-                    }else{  
-                    
-                    
-                    if(nameC.equals("child")){
-                        nameC=elements_responseC.get(j)[1];
-                        typeC=elements_responseC.get(j)[2];
-                    }
-                        
-                 
-                 
-                System.out.println("Consumer Response: " +nameC +" - "+ typeC);
-                 
-               System.out.println("NestedP: " +NestedP +", NestedC: "+ NestedC);
-                 
-                 if(nameP.equals(nameC)){
-                     match=true;
-                System.out.println("NAME MATCH '''''''''''''''''''''''");
-                     j= elements_responseC.size()+1;
-                    } else{
-                          String variantP= metadata_responseP.get(i)[2]; 
-                          int m=j;
-                         System.out.println(j); 
-                            String variantC=metadata_responseC.get(m)[2];
-                            nameC=metadata_responseC.get(m)[0];
-                            System.out.println("Variant: " +variantC);
-                            if(nameP.equalsIgnoreCase(variantC)&& !variantC.equals(" ")){
-                                System.out.println("NAME-VARIANT MATCH '''''''''''''''''''''''");
-                                //nameC=metadata_responseC.get(j)[0];
-                                typeC=metadata_responseC.get(m)[1];
-                                System.out.println("Consumer Response_variant: "+variantC+" -" +nameC +" - "+ typeC);
-                               match=true;
-                               
-                            }else if(nameC.equalsIgnoreCase(variantP)&& !variantP.equals(" ")){
-                                System.out.println("VARIANT-NAME MATCH '''''''''''''''''''''''");
-                               /// nameC=metadata_responseP.get(j)[0];
-                                typeC=metadata_responseC.get(m)[1];
-                                System.out.println("Consumer Response_variant: "+variantP+" -" +nameP +" - "+ typeP);
-                               match=true;
-                              
-                            } else if(variantP.equalsIgnoreCase(variantC)&& !variantC.equals(" ")&& !variantP.equals(" ")){
-                                System.out.println("VARIANT-VARIANT MATCH '''''''''''''''''''''''");
-                                //nameC=metadata_responseC.get(j)[0];
-                                typeC=metadata_responseC.get(m)[1];
-                                 System.out.println("Consumer Response_variant: "+variantC+" -"  +nameC +" - "+ typeC);
-                                 System.out.println("Provider reponse_variant: " +variantP+" -" +nameP +" - "+ typeP);
-                               match=true;
-                               
-                            }
-                      
-                        }
-                     
-                 }
-              
-                
-                
-               
-          if(match){
-              System.out.println("MATCH --- Provider: " +nameP +" - Consumer: " +nameC);
-              
-              if(NestedP){
-                         payload.addStatement("$T $L=payload_P.get$L().get$L() ",CodgenUtil.getType(typeP), nameP,NewClassP,nameP);
-                     } else {
-                         payload.addStatement("$T $L=payload_P.get$L() ",CodgenUtil.getType(typeP), nameP,nameP);
-                     }
-                     
-                     if(!typeP.equalsIgnoreCase(typeC)){
-                         
-                         if(typeP.equalsIgnoreCase("String")){
-                             if(typeC.equalsIgnoreCase("Boolean")){
-                              
-                                      payload.addStatement("$T $L_C",CodgenUtil.getType(typeC),nameP)
-                                     .beginControlFlow("if($L)",nameP)
-                                       .addStatement("$L_C= true",nameP)
-                                       .endControlFlow()
-                                     .beginControlFlow("else")
-                                        .addStatement("$L_C= false",nameP)
-                                     .endControlFlow();
-                           
-                             }else payload.addStatement("$T $L_C= $L.parse$L($L)",CodgenUtil.getType(typeC),nameP,Capitalize(typeC), Capitalize(typeC), nameP);
-                         
-                         }else if(typeC.equalsIgnoreCase("String")){
-                             if(typeP.equalsIgnoreCase("Boolean")){
-                              
-                                     payload.addStatement("$T $L_C",CodgenUtil.getType(typeC),nameP)
-                                     .beginControlFlow("if($L.equalsIgnoreCase(\"true\"))",nameP)
-                                       .addStatement("$L_C= \"true\"",nameP)
-                                       .endControlFlow()
-                                     .beginControlFlow("else")
-                                        .addStatement("$L_C= \"false\"",nameP)
-                                     .endControlFlow();
-                             }else payload.addStatement("$T $L_C= $L +\"\"",CodgenUtil.getType(typeC),nameP, nameP);
-                             
-                             
-                            
-                         }else if(typeP.equalsIgnoreCase("Boolean")){
-                          
-                             payload.addStatement("$T $L_C",CodgenUtil.getType(typeC),nameP)
-                                     .beginControlFlow("if($L)",nameP)
-                                       .addStatement("$L_C= 1",nameP)
-                                       .endControlFlow()
-                                     .beginControlFlow("else")
-                                        .addStatement("$L_C= 0",nameP)
-                                     .endControlFlow();
-                         }else{
-                             
-                             
-                         
-                             if((numberTypeDef(typeC)>numberTypeDef(typeP))){
-                             
-                                 payload.addStatement("$T $L_C= $L",CodgenUtil.getType(typeC),nameP, nameP);
-                             
-                              }else if((numberTypeDef(typeC)<numberTypeDef(typeP))){
-                                 payload.addStatement("$T $L_C=($T)$L",CodgenUtil.getType(typeC),nameP,CodgenUtil.getType(typeC), nameP);
-                                 }
-                         }
-                         
-                          
-                     }else {
-                          payload.addStatement(" $T $L_C=$L", CodgenUtil.getType(typeC),nameP, nameP);
-                     }
-                     
-                     
-                     
-                     
-                       if(NestedC){
-                       if(newClassesC<2)  payload.addStatement(" eu.generator.consumer.$L $L = new  eu.generator.consumer.$L ()", Capitalize(NewClassC), NewClassC, Capitalize(NewClassC));
-                         payload.addStatement(" $L.set$L($L_C)",NewClassC, nameC, nameP)
-                                 .addStatement("payload_C.set$L($L)",NewClassC,NewClassC);
-                     } else {
-                         payload.addStatement("payload_C.set$L($L_C)",nameC,nameP);
-                     } 
-                       
-                match=false;
-                j=elements_responseC.size()+1;
-                       
-                       
-          } else System.out.println("NO MATCH--Provider: " +nameP +" - Consumer: " +nameC); 
-                
-                
-                
-            }
-            
-          
-          
-            
-            
-           
-          }
-           
-           
-          
-    }
-        
-     
-     
-     payload.addStatement("return payload_C");
-           
-         
-     MethodSpec payloadTrans=payload.build();
-        return payloadTrans;      
-  } */
      
       public static String Capitalize( String name){
           name =name.substring(0, 1).toUpperCase() + name.substring(1,name.length()); 
@@ -1400,7 +1160,7 @@ public class ResourceLWGen {
       
       
     
-     public static void ResourcesLWGen (InterfaceMetadata MD_C, InterfaceMetadata MD_P ){
+     public static void PayloadTranslator (InterfaceMetadata MD_C, InterfaceMetadata MD_P ){
          
   
        MethodSpec testEcho=  testEcho();
@@ -1422,17 +1182,14 @@ public class ResourceLWGen {
         
         
         
-      AnnotationSpec path= AnnotationSpec
-                 .builder(Path.class)
-                 .addMember("value", "$S", "/weatherstation")
-                 .build();
+    
       
       
              
-     TypeSpec.Builder classGen =TypeSpec.classBuilder("RESTResources")
+     TypeSpec.Builder classGen =TypeSpec.classBuilder("PayloadTranslator")
               .addModifiers(Modifier.PUBLIC)
-             //.addMethod(testEcho)
-             .addMethod(methodgen);
+             .addMethod(constructor);
+             
      
      if(!MD_C.getResponse() && !MD_P.getResponse()){
           classGen.addMethod(requestAdaptor);
@@ -1446,17 +1203,7 @@ public class ResourceLWGen {
            
         }
              
-             classGen.addMethod(consumeService);
-     
-     if(MD_C.Protocol.equalsIgnoreCase("COAP")){
-         classGen.superclass(CoapResource.class)
-                 .addMethod(constructor);
-     }
-        
-     
-     if(MD_C.Protocol.equalsIgnoreCase("HTTP")){
-         classGen.addAnnotation(path);
-     }
+    
         TypeSpec RclassGen  = classGen.build();
 
                
@@ -1466,7 +1213,7 @@ public class ResourceLWGen {
                 .addFileComment("Auto generated")
                 .build();
         try{
-            javaFile2.writeTo(Paths.get("C:\\Users\\cripan\\Desktop\\Code_generation\\ConsumerCodeGeneration\\ConsumerGenerationModulesSpring\\InterfaceLightweight\\src\\main\\java"));
+            javaFile2.writeTo(Paths.get("C:\\Users\\cripan\\Desktop\\Code_generation\\InterfaceTranslatorSystem\\GenInterface\\src\\main\\java"));
         }catch (IOException ex){
             System.out.print("Exception:" + ex.getMessage());
         }
