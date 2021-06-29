@@ -9,9 +9,28 @@
 
 	<interface protocol="HTTP" address="http://127.0.0.1/8888" >
 	
-		<method name="GET" id="indoortemperature" path="/test">
+		<method name="POST" id="indoortemperature" path="/test">
 
-	
+                    	<request >
+                            <format> 
+					<encode name="XML" mediaType= "--" version="0"/>
+					<security name="null" version="0"/>
+					<qos name="null" version="0"/> 
+					<semantic name="null" version="0"/>
+					<notation href="null"/> 
+				</format> 
+                             <payload>	
+					<complextype type="null"/> 					
+					<element name="name" type="String" variation="id"/>
+					<element name="localization" type="String" variation="country"/>
+                                        <complexelement name="value" type="single">
+                                            <element name="temp" type="Integer" variation="temperature" unit="Celsius" max="40" />
+                                            <element name="unit" type="String" />
+                                        </complexelement>
+				
+					
+                             </payload>
+                         </request>
 			<response status="200">
                             <format> 
 					<encode name="XML" mediaType= "--" version="0"/>

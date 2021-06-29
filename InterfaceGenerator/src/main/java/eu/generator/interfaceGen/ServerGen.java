@@ -76,7 +76,8 @@ public class ServerGen {
 		   VelocityContext context = new VelocityContext();
 		   context.put("url",SystemURL+MDP.getPathResource());//TODO GET THE ADDRESS
                    context.put("method",MDC.getMethod());
-                   context.put("encoding",MDC.getMediatype_response());
+                   context.put("encoding_consumer",MDC.getMediatype_response());
+                    context.put("encoding_provider",MDP.getMediatype_response());
                    context.put("path",MDC.getPathResource());
                    context.put("id",MDC.getID());
 		   Writer writer = new FileWriter (new File("C:\\Users\\cripan\\Desktop\\Code_generation\\InterfaceTranslatorSystem\\GenInterface\\src\\main\\java\\eu\\generator\\resources\\RESTResources.java"));

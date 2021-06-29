@@ -9,8 +9,27 @@
 
 	<interface protocol="HTTP" address="http://127.0.0.1/8888" >
 	
-		<method name="GET" id="indoortemperature" path="/get_json_r">
+		<method name="POST" id="indoortemperature" path="/get_json_r">
 
+                    <request >
+                            <format> 
+					<encode name="JSON" mediaType= "--" version="0"/>
+					<security name="null" version="0"/>
+					<qos name="null" version="0"/> 
+					<semantic name="null" version="0"/>
+					<notation href="null"/> 
+				</format> 
+                              	<payload>	
+					<complextype type="null"/> 					
+                                         <element name="n" type="String" variation="name"/>
+                                         <element name="v" type="Float" variation="temperature" unit="Celsius"/>
+                                         <element name="u" type="String" variation="unit"/>
+                            		
+                                </payload>
+                                
+                                
+                         </request>
+                    
 			<response status="200">
                             <format> 
 					<encode name="JSON" mediaType= "--" version="0"/>

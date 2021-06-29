@@ -24,18 +24,19 @@ import org.apache.http.util.EntityUtils;
 
 public class ProviderInterpreter{
 
-  public static ResponseDTO_P0 consumeService(String url, String payload) throws IOException {
-     String payloadP=payload;
-    CloseableHttpClient httpClient = HttpClients.createDefault();
-     String result_in = "";
-     String result_out = "";
-    ResponseDTO_P0 responseObj=null;
+ 
 	
 		
-    try {
-       HttpGet request = new HttpGet(url);
-       request.addHeader("content-type", "application/json");
-       CloseableHttpResponse response = httpClient.execute(request);
+	 public static ResponseDTO_P0 consumeService(String url, String payload) throws IOException {
+		String payloadP=payload;
+		CloseableHttpClient httpClient = HttpClients.createDefault();
+		String result = "";
+		
+		ResponseDTO_P0 responseObj=null;
+		try {
+			HttpGet request = new HttpGet(url);
+			request.addHeader("content-type", "application/json");
+			CloseableHttpResponse response = httpClient.execute(request);	
 	   
 			try {
 			HttpEntity entity = response.getEntity();
@@ -48,8 +49,8 @@ public class ProviderInterpreter{
 			
 
 			if (entity != null) {
-				result_in = EntityUtils.toString(entity);
-				responseObj=objMapperP.readValue(result_in,ResponseDTO_P0.class);
+				result= EntityUtils.toString(entity);
+				responseObj=objMapperP.readValue(result,ResponseDTO_P0.class);
 				
 				
         }
