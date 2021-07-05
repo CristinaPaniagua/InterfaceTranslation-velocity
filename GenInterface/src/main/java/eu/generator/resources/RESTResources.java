@@ -1,81 +1,73 @@
+// Auto generated
 package eu.generator.resources;
 
 import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.github.underscore.lodash.U;
 import eu.generator.consumer.RequestDTO_C0;
 import eu.generator.consumer.ResponseDTO_C0;
 import eu.generator.provider.RequestDTO_P0;
-import eu.generator.provider.ResponseDTO_P0;
+import eu.generator.provider.ResponseDTO_P0; 
+import java.io.File;
 import java.io.IOException;
 import java.lang.Exception;
 import java.lang.String;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
+import java.net.URI;
+import java.net.URISyntaxException;
+import org.eclipse.californium.core.CoapClient;
+import org.eclipse.californium.core.CoapResource;
+import org.eclipse.californium.core.CoapResponse;
+import org.eclipse.californium.core.Utils;
+import org.eclipse.californium.core.coap.CoAP;
+import org.eclipse.californium.core.network.config.NetworkConfig;
+import org.eclipse.californium.core.network.config.NetworkConfigDefaultHandler;
+import org.eclipse.californium.core.server.resources.CoapExchange;
+import org.eclipse.californium.elements.exception.ConnectorException;
 
-@Path("/interface")
-public class RESTResources {
+public class RESTResources extends CoapResource {
+  public RESTResources() {
+     super("publish");
+         getAttributes().setTitle("Publish Resource");
+  }
 
+  public void handleGET(CoapExchange exchange) {
+    		String response_out=" ";
+	     
 
-@POST
-  @Path("/indoortemperature")
-  @Produces(MediaType.APPLICATION_XML)
-  @Consumes(MediaType.APPLICATION_XML)
- 
-  
-  	public String indoortemperature(String receivedPayload) throws IOException {
-		String response_out=" ";
-		RequestDTO_C0 request=new RequestDTO_C0();
+    	  
+	ObjectMapper objMapper_consumer=new XmlMapper();
 		
-			  
-		ObjectMapper objMapper_consumer=new XmlMapper();
-		
-	    	  RequestDTO_C0 requestrequest=objMapper_consumer.readValue(receivedPayload,RequestDTO_C0.class);
-	  
+    
+
+
+    ResponseDTO_P0 response=new ResponseDTO_P0();
+    
+        try {
+            response=ProviderInterpreter.consumeService("http://127.0.0.1:8899/test/get_json_r");
 	
+
+          ResponseDTO_C0 response_C=new ResponseDTO_C0();
 	  PayloadTranslator pt= new PayloadTranslator();
-	  RequestDTO_P0 request_P= pt.requestAdaptor(request);
-	  
-	  
-	 		
-		JsonFactory jsonFactory_objMapper_provider = new JsonFactory();
-		ObjectMapper objMapper_provider=new ObjectMapper(jsonFactory_objMapper_provider);
-		String payload=objMapper_provider.writeValueAsString(request_P);
-		
-	  	 
-	  ResponseDTO_P0 response=new ResponseDTO_P0();
-	  
-	  try {
-			
-			response=ProviderInterpreter.consumeService("http://127.0.0.1:8899/test/get_json_r",payload);
-			}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-	  
-	  
-	  
-	  ResponseDTO_C0 response_C=new ResponseDTO_C0();
 	  response_C= pt.responseAdaptor(response);
 	  
 	  
 	  if(response==null) {
-			return response_out;
+			System.out.println("ERROR: Response is null");
 		}
 		else {
 	
 			response_out= objMapper_consumer.writeValueAsString(response_C);
-			return response_out;
+                exchange.respond(CoAP.ResponseCode.CONTENT,response_out,41); //41- application/xml
+
+        		
 		}
-	  
-		
-	  
- }
-	
-
-
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+	}
+ 
   }
+
+
+}

@@ -5,8 +5,10 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.github.underscore.lodash.U;
+import eu.generator.consumer.RequestDTO_C0;
 import eu.generator.consumer.ResponseDTO_C0;
-import eu.generator.provider.ResponseDTO_P0;
+import eu.generator.provider.RequestDTO_P0;
+import eu.generator.provider.ResponseDTO_P0; 
 import java.io.File;
 import java.io.IOException;
 import java.lang.Exception;
@@ -31,31 +33,158 @@ public class RESTResources extends CoapResource {
 
 #if($method=="GET")
   public void handleGET(CoapExchange exchange) {
-    System.out.println(exchange.getRequestText());
-    String receivedPayload=exchange.getRequestText();
-     String response_out=" ";
+    #if($encoding_consumer=="CBOR")
+		Byte[] response_out=" ";
+	#else
+		String response_out=" ";
+	#end
+     
+
+    #if($encoding_consumer=="JSON")
+		
+	JsonFactory jsonFactory_objMapper_consumer = new JsonFactory();
+	ObjectMapper objMapper_consumer=new ObjectMapper(jsonFactory_objMapper_consumer);
+		
+    #elseif($encoding_consumer=="XML")
+	  
+	ObjectMapper objMapper_consumer=new XmlMapper();
+		
+    #else
+			//TODO rest of encodings
+    #end
+
+
+
     ResponseDTO_P0 response=new ResponseDTO_P0();
-    JsonFactory jsonFactory_objMapper_Response = new JsonFactory();
-    ObjectMapper objMapper_Response=new ObjectMapper(jsonFactory_objMapper_Response);
-    try {
-      String payload=null;
-      response=consumeService("http://127.0.0.1:8889/demo/indoortemperature",payload);
-      ResponseDTO_C0 response_C=new ResponseDTO_C0();
-       response_C= responseAdaptor(response);
-      if(response==null) {
-        exchange.respond( "ERROR: EMPTY RESPONSE");
-      }
-      else {
-        response_out= objMapper_Response.writeValueAsString(response_C);
-         exchange.respond(CoAP.ResponseCode.CONTENT,response_out,41);
-      }
-    }
-    catch (Exception e) {
-       e.printStackTrace();
-    }
+    
+        try {
+            response=ProviderInterpreter.consumeService("$url");
+	
+
+          ResponseDTO_C0 response_C=new ResponseDTO_C0();
+	  PayloadTranslator pt= new PayloadTranslator();
+	  response_C= pt.responseAdaptor(response);
+	  
+	  
+	  if(response==null) {
+			System.out.println("ERROR: Response is null");
+		}
+		else {
+	
+	#if($encoding_consumer=="CBOR")
+		response_out= objMapper_consumer.writeValueAsBytes(response_C);
+                exchange.respond(CoAP.ResponseCode.CONTENT,response_out,60); //60- application/cbor
+	#elseif($encoding_consumer=="XML")
+		response_out= objMapper_consumer.writeValueAsString(response_C);
+                exchange.respond(CoAP.ResponseCode.CONTENT,response_out,41); //41- application/xml
+
+        #else
+                response_out= objMapper_consumer.writeValueAsString(response_C);
+                exchange.respond(CoAP.ResponseCode.CONTENT,response_out,50); //50- application/json
+	#end	
+		
+		}
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+	}
+ 
   }
+
+#elseif($method=="POST")
+
+    public void handlePOST(CoapExchange exchange){
+        exchange.getRequestText();
+        System.out.println(exchange.getRequestText());
+        String receivedPayload=exchange.getRequestText();
+
+        #if($encoding_consumer=="CBOR")
+            byte[] response_out=null;
+            CBORFactory f = new CBORFactory();
+            ObjectMapper objMapper_consumer = new ObjectMapper(f);
+
+        #elseif($encoding_consumer=="JSON")
+	
+		String response_out=" ";
+                JsonFactory jsonFactory_objMapper_consumer = new JsonFactory();
+		ObjectMapper objMapper_consumer=new ObjectMapper(jsonFactory_objMapper_consumer);
+		
+	  #elseif($encoding_consumer=="XML")
+            String response_out=" ";
+            ObjectMapper objMapper_consumer=new XmlMapper();
+		
+	  #else
+			//TODO rest of encodings
+	  #end
+
+          RequestDTO_C0 request=new RequestDTO_C0();
+
+           try {
+           RequestDTO_C0 requestrequest=objMapper_consumer.readValue(receivedPayload,RequestDTO_C0.class);
+	  
+	
+	  PayloadTranslator pt= new PayloadTranslator();
+	  RequestDTO_P0 request_P= pt.requestAdaptor(request);
+	  
+	  
+	 #if($encoding_provider=="CBOR")
+		CBORFactory fp = new CBORFactory();
+		ObjectMapper objMapper_provider= new ObjectMapper(fp);
+		byte [] payload=objMapper_provider.writeValueAsBytes(request_P);
+		
+	 #elseif($encoding_provider=="JSON")
+		
+		JsonFactory jsonFactory_objMapper_provider = new JsonFactory();
+		ObjectMapper objMapper_provider=new ObjectMapper(jsonFactory_objMapper_provider);
+		String payload=objMapper_provider.writeValueAsString(request_P);
+		
+	  #elseif($encoding_provider=="XML")
+	  
+		ObjectMapper objMapper_provider=new XmlMapper();
+		String payload=objMapper_provider.writeValueAsString(request_P);
+		
+	  #else
+			//TODO rest of encodings
+	 
+	 #end
+	 
+	  ResponseDTO_P0 response=new ResponseDTO_P0();
+	  
+	 
+			
+			response=ProviderInterpreter.consumeService("$url",payload);
+                         ResponseDTO_C0 response_C=new ResponseDTO_C0();
+                         response_C= pt.responseAdaptor(response);
+	  
+	  
+	 if(response==null) {
+			System.out.println("ERROR: Response is null");
+		}
+		else {
+	
+	#if($encoding_consumer=="CBOR")
+		response_out= objMapper_consumer.writeValueAsBytes(response_C);
+                exchange.respond(CoAP.ResponseCode.CONTENT,response_out,60); //60- application/cbor
+	#elseif($encoding_consumer=="XML")
+		response_out= objMapper_consumer.writeValueAsString(response_C);
+                exchange.respond(CoAP.ResponseCode.CONTENT,response_out,41); //41- application/xml
+
+        #else
+                response_out= objMapper_consumer.writeValueAsString(response_C);
+                exchange.respond(CoAP.ResponseCode.CONTENT,response_out,50); //50- application/json
+	#end	
+                }
+                    }
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+
+
+    }
+
+
   #else
-  
+  //TODO PUT AND DELETE
   #end
 
 }

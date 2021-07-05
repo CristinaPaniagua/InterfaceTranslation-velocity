@@ -31,7 +31,7 @@ public class RESTResources {
   #if($encoding_consumer=="CBOR")
 	public byte[] $id(byte[]  receivedPayload) throws IOException {
 		byte[] response_out=null;
-		
+		RequestDTO_C0 request=new RequestDTO_C0();
 		CBORFactory f = new CBORFactory();
 		ObjectMapper objMapper_consumer = new ObjectMapper(f);
             		

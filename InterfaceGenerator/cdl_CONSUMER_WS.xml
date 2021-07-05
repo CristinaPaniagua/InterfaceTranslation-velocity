@@ -7,9 +7,9 @@
 
 
 
-	<interface protocol="HTTP" address="http://127.0.0.1/8888" >
+	<interface protocol="COAP" address="http://127.0.0.1/8888" >
 	
-		<method name="POST" id="indoortemperature" path="/test">
+		<method name="GET" id="indoortemperature" path="/test">
 
                     	<request >
                             <format> 

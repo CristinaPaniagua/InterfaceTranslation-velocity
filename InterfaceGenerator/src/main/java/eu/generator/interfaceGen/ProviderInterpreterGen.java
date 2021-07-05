@@ -29,7 +29,8 @@ public class ProviderInterpreterGen {
                     if(MD.getProtocol().equalsIgnoreCase("COAP")){
                         Template t=velocityEngine.getTemplate("templates/consumeServiceCoap.vm");
 		   VelocityContext context = new VelocityContext();
-		   //context.put("port","8888");
+		   context.put("method",MD.getMethod());
+                   context.put("encoding",MD.getMediatype_response());
 		   Writer writer = new FileWriter (new File("C:\\Users\\cripan\\Desktop\\Code_generation\\InterfaceTranslatorSystem\\GenInterface\\src\\main\\java\\eu\\generator\\resources\\ProviderInterpreter.java"));
 		   t.merge(context,writer);
 		   writer.flush();
