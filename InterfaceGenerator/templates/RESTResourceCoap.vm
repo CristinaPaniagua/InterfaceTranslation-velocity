@@ -32,6 +32,7 @@ public class RESTResources extends CoapResource {
   }
 
 #if($method=="GET")
+  @Override
   public void handleGET(CoapExchange exchange) {
     #if($encoding_consumer=="CBOR")
 		Byte[] response_out=" ";
@@ -92,7 +93,7 @@ public class RESTResources extends CoapResource {
   }
 
 #elseif($method=="POST")
-
+   @Override
     public void handlePOST(CoapExchange exchange){
         exchange.getRequestText();
         System.out.println(exchange.getRequestText());

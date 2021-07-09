@@ -33,9 +33,11 @@ public class RESTResources extends CoapResource {
 
   public void handleGET(CoapExchange exchange) {
     		String response_out=" ";
-	     
-
-    	  
+	 
+    	  System.out.println(exchange.getSourceAddress().toString());
+          System.out.println(exchange.getQueryParameter(response_out));
+          System.out.println(exchange.advanced().getEndpoint().getUri().getPath());
+          System.out.println(exchange.advanced().getEndpoint().getUri().toString());
 	ObjectMapper objMapper_consumer=new XmlMapper();
 		
     
@@ -44,7 +46,7 @@ public class RESTResources extends CoapResource {
     ResponseDTO_P0 response=new ResponseDTO_P0();
     
         try {
-            response=ProviderInterpreter.consumeService("http://127.0.0.1:8899/test/get_json_r");
+            response=ProviderInterpreter.consumeService("coap://localhost:5683/");
 	
 
           ResponseDTO_C0 response_C=new ResponseDTO_C0();
