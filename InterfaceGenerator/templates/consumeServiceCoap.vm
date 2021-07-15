@@ -4,6 +4,7 @@ package eu.generator.resources;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.fasterxml.jackson.dataformat.cbor.CBORFactory;
 import com.github.underscore.lodash.U;
 import eu.generator.consumer.ResponseDTO_C0;
 import eu.generator.provider.ResponseDTO_P0;
@@ -69,10 +70,10 @@ public class ProviderInterpreter{
     try {
 	#if($method=="GET")
         response = client.get();
-	#elseif($method=="POST")
-         response = client.post(payload,MediaTypeRegistry.APPLICATION_$encoding);
+	#elseif($method=="PUT")
+         response = client.put(payload,MediaTypeRegistry.APPLICATION_$encoding);
          #else
-         //TODO put and delete
+        response = client.post(payload,MediaTypeRegistry.APPLICATION_$encoding);
 	#end
 	
     } catch(ConnectorException|IOException e) {
@@ -83,6 +84,7 @@ public class ProviderInterpreter{
       responseText= response.getPayload();
       #else
       responseText= response.getResponseText();
+        System.out.println(responseText);
       #end  
     } else {
       System.out.println("No response received.");

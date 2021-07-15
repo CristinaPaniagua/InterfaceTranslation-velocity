@@ -4,6 +4,7 @@ package eu.generator.resources;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.fasterxml.jackson.dataformat.cbor.CBORFactory;
 import com.github.underscore.lodash.U;
 import eu.generator.consumer.RequestDTO_C0;
 import eu.generator.consumer.ResponseDTO_C0;
@@ -31,45 +32,59 @@ public class RESTResources extends CoapResource {
          getAttributes().setTitle("Publish Resource");
   }
 
-  public void handleGET(CoapExchange exchange) {
-    		String response_out=" ";
-	 
-    	  System.out.println(exchange.getSourceAddress().toString());
-          System.out.println(exchange.getQueryParameter(response_out));
-          System.out.println(exchange.advanced().getEndpoint().getUri().getPath());
-          System.out.println(exchange.advanced().getEndpoint().getUri().toString());
-	ObjectMapper objMapper_consumer=new XmlMapper();
+   @Override
+    public void handlePOST(CoapExchange exchange){
+        exchange.getRequestText();
+        System.out.println(exchange.getRequestText());
+        String receivedPayload=exchange.getRequestText();
+
+        	
+		String response_out=" ";
+                JsonFactory jsonFactory_objMapper_consumer = new JsonFactory();
+		ObjectMapper objMapper_consumer=new ObjectMapper(jsonFactory_objMapper_consumer);
 		
-    
+	  
+      
 
-
-    ResponseDTO_P0 response=new ResponseDTO_P0();
-    
-        try {
-            response=ProviderInterpreter.consumeService("coap://localhost:5683/");
+           try {
+           RequestDTO_C0 request=objMapper_consumer.readValue(receivedPayload,RequestDTO_C0.class);
+	  
 	
-
-          ResponseDTO_C0 response_C=new ResponseDTO_C0();
 	  PayloadTranslator pt= new PayloadTranslator();
-	  response_C= pt.responseAdaptor(response);
+	  RequestDTO_P0 request_P= pt.requestAdaptor(request);
 	  
 	  
-	  if(response==null) {
+	 		
+		JsonFactory jsonFactory_objMapper_provider = new JsonFactory();
+		ObjectMapper objMapper_provider=new ObjectMapper(jsonFactory_objMapper_provider);
+		String payload=objMapper_provider.writeValueAsString(request_P);
+		
+	  	 
+	  ResponseDTO_P0 response=new ResponseDTO_P0();
+	  
+	 
+			
+			response=ProviderInterpreter.consumeService("coap://localhost:5555/publish",payload);
+                         ResponseDTO_C0 response_C=new ResponseDTO_C0();
+                         response_C= pt.responseAdaptor(response);
+	  
+	  
+	 if(response==null) {
 			System.out.println("ERROR: Response is null");
 		}
 		else {
 	
-			response_out= objMapper_consumer.writeValueAsString(response_C);
-                exchange.respond(CoAP.ResponseCode.CONTENT,response_out,41); //41- application/xml
-
-        		
+	                response_out= objMapper_consumer.writeValueAsString(response_C);
+                exchange.respond(CoAP.ResponseCode.CONTENT,response_out,50); //50- application/json
+	                }
+                    }
+		catch (Exception e) {
+			e.printStackTrace();
 		}
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-	}
- 
-  }
 
 
+    }
+
+
+  
 }

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package HttpConsumer;
+package CoapConsumer;
 
 import ConsumerDTO.RequestDTO_C0;
 import ConsumerDTO.Value;
@@ -16,31 +16,29 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
  *
  * @author cripan
  */
-public class HttpMain {
 
-   public static String Method="GET";
-   public static Boolean isRequest=false;
+
+public class CoapMain {
+       
+   public static String Method="POST";
+   public static Boolean isRequest=true;
    public static Boolean isResponse=true;
-   public static String Encoding="XML";
+   public static String Encoding="JSON";
    public static Value value= new Value(23,"cel");
    public static RequestDTO_C0 request =new RequestDTO_C0("temp","Sweden",value);
-   
    
     public static void main(String[] args) {
      
        //USE THE GENERATED INTERFACE URL! 
-      ConsumerMethodsHttp consumer = new ConsumerMethodsHttp("http://127.0.0.1:8888/interface/test");
+      ConsumerMethodsCoap consumer = new ConsumerMethodsCoap("coap://localhost:5683/publish");
      
         if(Method.equalsIgnoreCase("GET")){
             if(!isRequest&&isResponse){
-               if(Encoding.equalsIgnoreCase("JSON")){
+               if(Encoding.equalsIgnoreCase("JSON")||Encoding.equalsIgnoreCase("XML")){
                 
-                   consumer.GetJSONR();
+                   consumer.GetStringR();
                } 
-                if(Encoding.equalsIgnoreCase("XML")){
-                   
-                   consumer.GetXMLR();
-               }
+               
                  if(Encoding.equalsIgnoreCase("CBOR")){
                   
                    consumer.GetCBORR();
@@ -48,7 +46,7 @@ public class HttpMain {
             }
         }
         
-           if(Method.equalsIgnoreCase("POST")){
+        if(Method.equalsIgnoreCase("POST")){
             if(isRequest&&isResponse){
                 if(Encoding.equalsIgnoreCase("JSON")){
                  JsonFactory jsonFactory_objMapperP = new JsonFactory();
@@ -56,6 +54,7 @@ public class HttpMain {
                  String payload="";
                 try{
                 payload=objMapper.writeValueAsString(request);
+                System.out.println(payload);
                 }
 		catch (Exception e) {
 			e.printStackTrace();
@@ -91,10 +90,15 @@ public class HttpMain {
         
         
         
-        
+       
+		
+		
         
         
         
     }
-    
+   
+   
+   
+   
 }

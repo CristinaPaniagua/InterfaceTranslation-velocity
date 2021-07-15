@@ -20,9 +20,12 @@ import javax.ws.rs.core.MediaType;
 @Path("/interface")
 public class RESTResources {
 
-#if($method=="POST")
-
-@POST
+#if($method=="POST"||$method=="PUT")
+    #if($method=="PUT")
+    @PUT
+    #else
+    @POST
+    #end
   @Path("/indoortemperature")
   @Produces(MediaType.APPLICATION_${encoding_consumer})
   @Consumes(MediaType.APPLICATION_${encoding_consumer})

@@ -4,6 +4,7 @@ package eu.generator.resources;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.fasterxml.jackson.dataformat.cbor.CBORFactory;
 import com.github.underscore.lodash.U;
 import eu.generator.consumer.RequestDTO_C0;
 import eu.generator.consumer.ResponseDTO_C0;
@@ -35,7 +36,7 @@ public class RESTResources extends CoapResource {
   @Override
   public void handleGET(CoapExchange exchange) {
     #if($encoding_consumer=="CBOR")
-		Byte[] response_out=" ";
+		byte[] response_out=null;
 	#else
 		String response_out=" ";
 	#end
@@ -49,6 +50,11 @@ public class RESTResources extends CoapResource {
     #elseif($encoding_consumer=="XML")
 	  
 	ObjectMapper objMapper_consumer=new XmlMapper();
+        
+        #elseif($encoding_consumer=="CBOR")
+           
+            CBORFactory f = new CBORFactory();
+            ObjectMapper objMapper_consumer = new ObjectMapper(f);
 		
     #else
 			//TODO rest of encodings
@@ -92,9 +98,13 @@ public class RESTResources extends CoapResource {
  
   }
 
-#elseif($method=="POST")
+#else
    @Override
+#if($method=="POST")
     public void handlePOST(CoapExchange exchange){
+#else
+    public void handlePUT(CoapExchange exchange){
+#end
         exchange.getRequestText();
         System.out.println(exchange.getRequestText());
         String receivedPayload=exchange.getRequestText();
@@ -118,10 +128,10 @@ public class RESTResources extends CoapResource {
 			//TODO rest of encodings
 	  #end
 
-          RequestDTO_C0 request=new RequestDTO_C0();
+      
 
            try {
-           RequestDTO_C0 requestrequest=objMapper_consumer.readValue(receivedPayload,RequestDTO_C0.class);
+           RequestDTO_C0 request=objMapper_consumer.readValue(receivedPayload,RequestDTO_C0.class);
 	  
 	
 	  PayloadTranslator pt= new PayloadTranslator();
@@ -184,8 +194,6 @@ public class RESTResources extends CoapResource {
     }
 
 
-  #else
-  //TODO PUT AND DELETE
   #end
 
 }

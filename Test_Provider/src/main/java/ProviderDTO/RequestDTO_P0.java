@@ -8,17 +8,17 @@ import java.lang.String;
 @JsonIgnoreProperties(
     ignoreUnknown = true
 )
-public class ResponseDTO_P0 {
+public class RequestDTO_P0 {
   private String n;
 
   private float v;
 
   private String u;
 
-  public ResponseDTO_P0() {
+  public RequestDTO_P0() {
   }
 
-  public ResponseDTO_P0(String n, float v, String u) {
+  public RequestDTO_P0(String n, float v, String u) {
     this.n = n;
     this.v = v;
     this.u = u;

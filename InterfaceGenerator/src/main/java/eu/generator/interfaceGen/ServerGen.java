@@ -77,6 +77,7 @@ public class ServerGen {
 		   context.put("url",SystemURL+MDP.getPathResource());//TODO GET THE ADDRESS
                    context.put("method",MDC.getMethod());
                    context.put("encoding_consumer",MDC.getMediatype_response());
+                   System.out.println("encoding_consumer"+MDC.getMediatype_response());
                     context.put("encoding_provider",MDP.getMediatype_response());
                    context.put("path",MDC.getPathResource());
                    context.put("id",MDC.getID());

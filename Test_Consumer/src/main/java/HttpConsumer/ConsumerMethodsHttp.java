@@ -76,10 +76,10 @@ public class ConsumerMethodsHttp {
     }     
     
       // TEST POST JSON Request-Response
-    public void PostJSONRR (){
+    public void PostJSONRR (String payload){
         
         try{
-            String payload= "{\"Payload\":\"JSON POST TEST\"}";
+          
              System.out.println("request: "+payload);
             String result = sendPOST_JSON(URL,payload);
             System.out.println("response: "+result);
@@ -91,10 +91,10 @@ public class ConsumerMethodsHttp {
   
     
    // TEST POST XML only Request-Response
-    public void PostXMLRR (){
+    public void PostXMLRR (String payload){
         
             try{
-            String payload= "<Response>XML PAYLOAD POST TEST</Response>";
+           
              System.out.println("request:"+payload);
             String result = sendPOST_XML(URL,payload);
              System.out.println("response: "+result);
@@ -106,10 +106,10 @@ public class ConsumerMethodsHttp {
     
     
      // TEST POST CBOR Request-Response
-    public void PostCBORRR (){
+    public void PostCBORRR ( byte[]  payload){
         
             try{
-            byte[]  payload="CBOR PAYLOAD TEST".getBytes();    
+              
             byte[] result = sendPOST_Bytes(URL, payload);
             System.out.println(result.toString());
         } catch (Exception e) {

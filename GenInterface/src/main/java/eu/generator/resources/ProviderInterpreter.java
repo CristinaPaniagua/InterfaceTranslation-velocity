@@ -4,6 +4,7 @@ package eu.generator.resources;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.fasterxml.jackson.dataformat.cbor.CBORFactory;
 import com.github.underscore.lodash.U;
 import eu.generator.consumer.ResponseDTO_C0;
 import eu.generator.provider.ResponseDTO_P0;
@@ -27,7 +28,7 @@ import org.eclipse.californium.elements.exception.ConnectorException;
 
 public class ProviderInterpreter{
 
- public static ResponseDTO_P0 consumeService(String url) throws IOException {
+ public static ResponseDTO_P0 consumeService(String url, String payload) throws IOException {
    
      File CONFIG_FILE = new File("Californium.properties");
         	 String CONFIG_HEADER = "Californium CoAP Properties file for Fileclient";
@@ -59,13 +60,14 @@ public class ProviderInterpreter{
            String responseText= " ";
       
     try {
-	        response = client.get();
+	        response = client.post(payload,MediaTypeRegistry.APPLICATION_JSON);
 		
     } catch(ConnectorException|IOException e) {
       System.err.println("Got an error: " + e);
     }
     if(response!=null) {
             responseText= response.getResponseText();
+        System.out.println(responseText);
           } else {
       System.out.println("No response received.");
     }

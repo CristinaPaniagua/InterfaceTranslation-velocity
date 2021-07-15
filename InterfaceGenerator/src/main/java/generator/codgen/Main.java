@@ -41,7 +41,7 @@ private static ArrayList<String> classesResponseC= new ArrayList<String>();
         
         String service = "indoortemperature";
         String system="providerTest";
-        String systemURL="http://127.0.0.1:8899/test";
+        String systemURL="coap://localhost:5555";
         readCDL readConsumer = new readCDL();
         MD_Consumer= readConsumer.read("indoortemperature","consumer");
         Boolean MD_ConsumerValid=metedataValidation(MD_Consumer);

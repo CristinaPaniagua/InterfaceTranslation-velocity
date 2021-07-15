@@ -8,17 +8,17 @@ import java.lang.String;
 @JsonIgnoreProperties(
     ignoreUnknown = true
 )
-public class ResponseDTO_C0 {
+public class RequestDTO_C0 {
   private String name;
 
   private String localization;
 
   private Value value;
 
-  public ResponseDTO_C0() {
+  public RequestDTO_C0() {
   }
 
-  public ResponseDTO_C0(String name, String localization, Value value) {
+  public RequestDTO_C0(String name, String localization, Value value) {
     this.name = name;
     this.localization = localization;
     this.value = value;
